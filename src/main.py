@@ -32,13 +32,13 @@ def main(start_step):
     while True:
         if record:
             handler.initialize_audacity()
-            recordstart = input('Start Recording New Track? [y]es / [n]o: ')
+            recordstart = input('Start Recording New Track? [y]es / [n]o: ').lower()
             if recordstart == 'y':
                 handler.audacity.record()
                 handler.audacity.collapse_tracks()
                 input('Press [ENTER] To Stop Recording')
                 handler.audacity.stop_record()
-                export_confirm = input('Select A Recorded Track To Export? [y]es / [n]o: ')
+                export_confirm = input('Select A Recorded Track To Export? [y]es / [n]o: ').lower()
                 if export_confirm == 'n':
                     continue
                 elif export_confirm == 'y':
@@ -55,7 +55,7 @@ def main(start_step):
                 print('Select \'y\' or \'n\'')
                 continue
         
-        process_audio = input(f"Process Audio in {handler.audacity.src_dir} ? [y]es / [n]o: ")
+        process_audio = input(f"Process Audio in {handler.audacity.src_dir} ? [y]es / [n]o: ").lower()
         if process_audio == "y":
             edit_start = int(input('Select [SECONDS] Marker For Beginning: ')) * 1000
             edit_stop = int(input('Select [SECONDS] Marker For Ending: ')) * 1000
@@ -67,9 +67,10 @@ def main(start_step):
             print('Select \'y\' or \'n\'')
             continue
 
-        upload_to_soundcloud = input('Proceed With Upload To SoundCloud? [y]es / [n]o: ')
+        upload_to_soundcloud = input('Proceed With Upload To SoundCloud? [y]es / [n]o: ').lower()
         if upload_to_soundcloud == 'y': 
             title = input("Track title: ")
+            handler.audio_processor.move_to_final_dir()
             handler.soundcloud.upload(title=title, artwork=handler.config_file["image"]
                                       )
         elif upload_to_soundcloud == 'n':

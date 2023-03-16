@@ -15,10 +15,10 @@ class ProcessAudioBase:
             config_file (dict): Config file
         """        
         self.config = config_file
-        self.sd = self.config["step_directory"] #!!!!
-        self.process_dir = self.sd["main_dir"] #!!!!
-        self.src_dir = self.process_dir + self.sd["steps"]["raw"] #!!!!
-        self.file_name = [f[:-4] for f in os.listdir(self.src_dir) if '.mp3' in f][0] #!!!!
+        self.sd = self.config["step_directory"]
+        self.process_dir = self.sd["main_dir"]
+        self.src_dir = self.process_dir + self.sd["steps"]["raw"]
+        self.file_name = [f[:-4] for f in os.listdir(self.src_dir) if '.mp3' in f][0]
         self.get_dirs_and_files()
 
     def get_dirs_and_files(self):
@@ -77,7 +77,10 @@ class ProcessAudioBase:
         raw_file = AudioSegment.from_mp3(self.raw_file)
         raw_file.export(f'{self.sermon_dir}{self.file_name}_{today}_RAW.mp3')
         print('Copied Raw File To Sermons Directory')
-        sliced_file = raw_file[start:stop]
+        if start == 0 and stop == -1:
+            sliced_file = raw_file
+        else:
+            sliced_file = raw_file[start:stop]
         sliced_file.export(self.trimmed_file)
         print('Trim Complete')
         self.sleep(2)
@@ -176,6 +179,11 @@ class ProcessAudioBase:
         print('Copied to Staging Directory')
         self.remove(input)
         self.sleep(2)
+
+    def move_to_final_dir(self):
+        today = date.today()
+        final_file = AudioSegment.from_mp3(self.soundcloud_src_file)
+        final_file.export(f'{self.config["podcast_dir"]}{self.file_name}_{today}_FINAL.mp3')
 
 class ProcessAudioFull(ProcessAudioBase):
     def __init__(self, config_file):
