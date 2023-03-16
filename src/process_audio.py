@@ -9,6 +9,11 @@ import time
 
 class ProcessAudioBase:
     def __init__(self, config_file): 
+        """Audio processing base class
+
+        Args:
+            config_file (dict): Config file
+        """        
         self.config = config_file
         self.sd = self.config["step_directory"] #!!!!
         self.process_dir = self.sd["main_dir"] #!!!!
@@ -17,6 +22,9 @@ class ProcessAudioBase:
         self.get_dirs_and_files()
 
     def get_dirs_and_files(self):
+        """
+        Get the directories and files for the audio processing steps
+        """
         self.trimmed_dir = self.process_dir + self.sd["steps"]["trimmed"]
         self.high_passed_dir = self.process_dir + self.sd["steps"]["high_passed"]
         self.normalized1_dir = self.process_dir + self.sd["steps"]["normalized1"]
@@ -39,15 +47,32 @@ class ProcessAudioBase:
         os.chdir(self.src_dir)
     
     def run_command(self, command):
+        """
+        Run a command in the terminal
+        """
         os.system(command)
 
     def remove(self, file):
+        """Remove a file
+
+        Args:
+            file (str): Path to file
+        """        
         self.run_command(f'rm -f {file}')
 
     def sleep(self, t):
+        """
+        Sleep for t seconds
+        """
         time.sleep(t)
 
     def trim(self, start, stop):
+        """Trim the audio file
+
+        Args:
+            start (int): Location to start trimming
+            stop (int): Location to stop trimming
+        """        
         today = date.today()
         raw_file = AudioSegment.from_mp3(self.raw_file)
         raw_file.export(f'{self.sermon_dir}{self.file_name}_{today}_RAW.mp3')
@@ -58,6 +83,12 @@ class ProcessAudioBase:
         self.sleep(2)
 
     def high_pass(self, input, output):
+        """Apply a high pass filter to the audio file
+
+        Args:
+            input (str): Location of input file
+            output (str): Location of output file
+        """        
         high_pass_config = self.config["process_audio"]["high_pass"]
         high_pass_freq = high_pass_config["freq"]
         self.run_command(
@@ -68,6 +99,12 @@ class ProcessAudioBase:
         self.sleep(2)
 
     def normalize(self, input, output):
+        """Apply normalization to the audio file
+
+        Args:
+            input (str): Location of input file
+            output (str): Location of output file
+        """  
         normalize_config = self.config["process_audio"]["normalize"]
         I = normalize_config["I"]
         LRA = normalize_config["LRA"]
@@ -80,6 +117,12 @@ class ProcessAudioBase:
         self.sleep(2)
 
     def compress(self, input, output):
+        """Apply compression to the audio file
+
+        Args:
+            input (str): Location of input file
+            output (str): Location of output file
+        """  
         compress_config = self.config["process_audio"]["compress"]
         threshold = compress_config["threshold"]
         ratio = compress_config["ratio"]
@@ -94,6 +137,13 @@ class ProcessAudioBase:
         self.sleep(2)
 
     def compile(self, input, output):
+        """Compile the audio file
+        with the opener and closer
+
+        Args:
+            input (str): Location of input file
+            output (str): Location of output file
+        """  
         opener = AudioSegment.from_mp3(self.opener)
         closer = AudioSegment.from_mp3(self.closer)
         sermon = AudioSegment.from_mp3(input)
@@ -114,6 +164,11 @@ class ProcessAudioBase:
         self.sleep(2)
 
     def stage(self, input):
+        """Stage the audio file for upload to SoundCloud
+
+        Args:
+            input (str): Location of input file
+        """  
         time_stamp = time.time()
         self.soundcloud_src_file = f'{self.soundcloud_src_dir}{self.file_name}_{str(time_stamp)[:9]}.mp3'
         final_file = AudioSegment.from_mp3(input)
@@ -124,6 +179,11 @@ class ProcessAudioBase:
 
 class ProcessAudioFull(ProcessAudioBase):
     def __init__(self, config_file):
+        """Audio processing class for full process
+
+        Args:
+            config_file (dict): Config file
+        """        
         self.config = config_file
         self.sd = self.config["step_directory"]
         self.process_dir = self.sd["main_dir"]
@@ -132,6 +192,12 @@ class ProcessAudioFull(ProcessAudioBase):
         self.get_dirs_and_files()
 
     def process(self, start, stop):
+        """Handles the full process
+
+        Args:
+            start (int): Location to start trimming
+            stop (int): Location to stop trimming
+        """        
         self.trim(start, stop)
         self.high_pass(self.trimmed_file, self.high_passed_file)
         self.normalize(self.high_passed_file, self.normalized1_file)
@@ -142,6 +208,11 @@ class ProcessAudioFull(ProcessAudioBase):
 
 class ProcessAudioCompress(ProcessAudioBase):
     def __init__(self, config_file):
+        """Audio processing class starting from post compression
+
+        Args:
+            config_file (dict): Config file
+        """   
         self.config = config_file
         self.sd = self.config["step_directory"] #!!!!
         self.process_dir = self.sd["main_dir"] #!!!!
@@ -150,12 +221,17 @@ class ProcessAudioCompress(ProcessAudioBase):
         self.get_dirs_and_files()
 
     def process(self, start, stop):
-        print('AAAAAAA')
+        """
+        Handles the process from post compression
+        """
         self.normalize(self.compressed_file, self.normalized2_file)
         self.compile(self.normalized2_file, self.compiled_file)
         self.stage(self.compiled_file)
 
 def ProcessRegistry(process):
+    """
+    Registry for the process classes
+    """
     registry = {
         "full" : ProcessAudioFull,
         "compress": ProcessAudioCompress

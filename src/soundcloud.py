@@ -53,6 +53,11 @@ class Progressbar(object):
 
 class SoundcloudEngine:
     def __init__(self, config_file):
+        """Class to handle Soundcloud commands
+
+        Args:
+            config_file (dict): Config file
+        """        
         self.config = config_file
         self.access_token = config_file["soundcloud"]["access_token"]
     
@@ -67,6 +72,21 @@ class SoundcloudEngine:
         artwork=None, 
         callback=Progressbar
     ):
+        """Upload a file to Soundcloud
+
+        Args:
+            sharing (str, optional): Determines who can view the track. Defaults to 'private'.
+            downloadable (bool, optional): Determines if the track can be downloaded. Defaults to False.
+            title (_type_, optional): The title of the track. Defaults to None.
+            description (_type_, optional): Description of the track. Defaults to None.
+            genre (_type_, optional): Genre of the track. Defaults to None.
+            tag_list (_type_, optional): List of tags for the track. Defaults to None.
+            artwork (_type_, optional): Artwork for the track. Defaults to None.
+            callback (_type_, optional): Callback function for the progress bar. Defaults to Progressbar.
+
+        Returns:
+            dict: Response from Soundcloud
+        """        
         step_dir = self.config["step_directory"]
         filepath = step_dir["main_dir"] + step_dir["steps"]["soundcloud_source"]
         file = [f for f in os.listdir(filepath) if '.mp3' in f][0]

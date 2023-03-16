@@ -10,6 +10,13 @@ CONFIG_FILE = "./config.json"
 @click.command()
 @click.option("--start-step", default="full")
 def main(start_step):
+    """
+    Main function for the podcast script
+    to start the podcast process at a specific step
+
+    Args:
+        start_step (str): Step to start the process at
+    """    
     with open(CONFIG_FILE) as json_file:
         config_file = json.load(json_file)
 
@@ -63,7 +70,8 @@ def main(start_step):
         upload_to_soundcloud = input('Proceed With Upload To SoundCloud? [y]es / [n]o: ')
         if upload_to_soundcloud == 'y': 
             title = input("Track title: ")
-            handler.soundcloud.upload(title=title)
+            handler.soundcloud.upload(title=title, artwork=handler.config_file["image"]
+                                      )
         elif upload_to_soundcloud == 'n':
             print('Please Record Another Track,\nChange Your Track Selection,\nOr Change Your Track Edit Selections')
             continue
