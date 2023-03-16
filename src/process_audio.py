@@ -214,6 +214,54 @@ class ProcessAudioFull(ProcessAudioBase):
         self.compile(self.normalized2_file, self.compiled_file)
         self.stage(self.compiled_file)
 
+
+class ProcessAudioHighpass(ProcessAudioBase):
+    def __init__(self, config_file):
+        """Audio processing class starting from post compression
+
+        Args:
+            config_file (dict): Config file
+        """   
+        self.config = config_file
+        self.sd = self.config["step_directory"]
+        self.process_dir = self.sd["main_dir"]
+        self.src_dir = self.process_dir + self.sd["steps"]["high_passed"]
+        self.file_name = ["_".join(f[:-4].split("_")[:-1]) for f in os.listdir(self.src_dir) if '.mp3' in f][0]
+        self.get_dirs_and_files()
+
+    def process(self, start, stop):
+        """
+        Handles the process from post high pass
+        """
+        self.normalize(self.high_passed_file, self.normalized1_file)
+        self.compress(self.normalized1_file, self.compressed_file)
+        self.normalize(self.compressed_file, self.normalized2_file)
+        self.compile(self.normalized2_file, self.compiled_file)
+        self.stage(self.compiled_file)
+
+class ProcessAudioNormalize1(ProcessAudioBase):
+    def __init__(self, config_file):
+        """Audio processing class starting from post normalization 1
+
+        Args:
+            config_file (dict): Config file
+        """   
+        self.config = config_file
+        self.sd = self.config["step_directory"]
+        self.process_dir = self.sd["main_dir"]
+        self.src_dir = self.process_dir + self.sd["steps"]["normalize1"]
+        self.file_name = ["_".join(f[:-4].split("_")[:-1]) for f in os.listdir(self.src_dir) if '.mp3' in f][0]
+        self.get_dirs_and_files()
+
+    def process(self, start, stop):
+        """
+        Handles the process from post compression
+        """
+        self.compress(self.normalized1_file, self.compressed_file)
+        self.normalize(self.compressed_file, self.normalized2_file)
+        self.compile(self.normalized2_file, self.compiled_file)
+        self.stage(self.compiled_file)
+
 class ProcessAudioCompress(ProcessAudioBase):
     def __init__(self, config_file):
         """Audio processing class starting from post compression
@@ -222,10 +270,10 @@ class ProcessAudioCompress(ProcessAudioBase):
             config_file (dict): Config file
         """   
         self.config = config_file
-        self.sd = self.config["step_directory"] #!!!!
-        self.process_dir = self.sd["main_dir"] #!!!!
-        self.src_dir = self.process_dir + self.sd["steps"]["compressed"] #!!!!
-        self.file_name = ["_".join(f[:-4].split("_")[:-1]) for f in os.listdir(self.src_dir) if '.mp3' in f][0] #!!!!
+        self.sd = self.config["step_directory"]
+        self.process_dir = self.sd["main_dir"]
+        self.src_dir = self.process_dir + self.sd["steps"]["compressed"]
+        self.file_name = ["_".join(f[:-4].split("_")[:-1]) for f in os.listdir(self.src_dir) if '.mp3' in f][0]
         self.get_dirs_and_files()
 
     def process(self, start, stop):
@@ -242,10 +290,9 @@ def ProcessRegistry(process):
     """
     registry = {
         "full" : ProcessAudioFull,
+        "highpass": ProcessAudioHighpass,
+        "normalize1": ProcessAudioNormalize1,
         "compress": ProcessAudioCompress
     }
 
     return registry[process]
-
-
-
