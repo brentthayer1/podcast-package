@@ -1,0 +1,39 @@
+{
+    "sermon_dir": "/Users/benttreeworship/Dropbox/sermons/",
+    "podcast_dir" : "/Users/benttreeworship/Dropbox/podcasts/",
+    "opener": "/Users/benttreeworship/Desktop/soundcloud_process/bumper/bumper_opener.mp3",
+    "closer": "/Users/benttreeworship/Desktop/soundcloud_process/bumper/bumper_closer.mp3",
+    "image": "/Users/benttreeworship/Desktop/soundcloud_process/img/CURRENT_IMAGE/*",
+    "step_directory": {
+        "main_dir" : "/Users/benttreeworship/Desktop/podcast_steps/",
+        "steps":{
+            "raw": "0_RAW_FILE/",
+            "trimmed": "1_TRIMMED/",
+            "high_passed": "2_HIGH_PASSED/",
+            "normalized1": "3_NORMALIZED1/",
+            "compressed": "4_COMPRESSED/",
+            "normalized2": "5_NORMALIZED2/",
+            "compiled": "6_COMPILED/",
+            "soundcloud_source": "7_SOUNDCLOUD_SOURCE/"
+        }
+    },
+    "process_audio":{
+        "high_pass" :{
+            "freq": 180
+        },
+        "normalize": {
+            "I": -15.0,
+            "LRA": 7.0,
+            "TP": -2
+        },
+        "compress": {
+            "threshold": 0.089,
+            "ratio": 4,
+            "attack": 200,
+            "release": 1000
+        }
+    },
+    "soundcloud": {
+        "access_token": "1-51665-552586914-714608b076026c"
+    }
+}
