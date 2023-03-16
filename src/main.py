@@ -5,7 +5,7 @@ import json
 
 from podcast_handler import PodcastHandler
 
-CONFIG_FILE = "./config.json"
+CONFIG_FILE = "../config.json"
     
 @click.command()
 @click.option("--start-step", default="full")
