@@ -133,7 +133,6 @@ class Audacity:
         printer('Audio Device Selected\n')
         self.run_command("osascript -e 'quit app \"Audacity\"'")
         time.sleep(2)
-        # self.run_command('cd ~ ; cd Desktop/soundcloud_process/ ; python main.py')
 
     def export(self, selection):
         """

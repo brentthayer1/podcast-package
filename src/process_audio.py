@@ -78,14 +78,12 @@ class ProcessAudioBase:
         today = date.today()
         raw_file = AudioSegment.from_mp3(self.raw_file)
         raw_file.export(f'{self.sermon_dir}{self.file_name}_{today}_RAW.mp3')
-        # print('Copied Raw File To Sermons Directory')
         printer('Copied Raw File To Sermons Directory')
         if start == 0 and stop == -1:
             sliced_file = raw_file
         else:
             sliced_file = raw_file[start:stop]
         sliced_file.export(self.trimmed_file)
-        # print('Trim Complete')
         printer('Trim Complete')
         
         self.sleep(2)
@@ -102,7 +100,6 @@ class ProcessAudioBase:
         self.run_command(
             f'ffmpeg -i {input} -af "highpass=f={high_pass_freq}" {output} -hide_banner -loglevel error'
         )
-        # print('High Pass Complete')
         printer('High Pass Complete')
         self.remove(input)
         self.sleep(2)
@@ -121,7 +118,6 @@ class ProcessAudioBase:
         self.run_command(
             f'ffmpeg -i {input} -af loudnorm=I={I}:LRA={LRA}:TP={TP} -ar 48k {output} -hide_banner -loglevel error'
         )
-        # print('Normalization Complete')
         printer('Normalization Complete')
         self.remove(input)
         self.sleep(2)
@@ -142,7 +138,6 @@ class ProcessAudioBase:
         self.run_command(
             f'ffmpeg -i {input} -af acompressor=threshold={threshold}:ratio={ratio}:attack={attack}:release={release} {output} -hide_banner -loglevel error'
         )
-        # print('Compression Complete')
         printer('Compression Complete')
         self.remove(input)
         self.sleep(2)
@@ -185,7 +180,6 @@ class ProcessAudioBase:
         self.soundcloud_src_file = f'{self.soundcloud_src_dir}{self.file_name}_{str(time_stamp)[:9]}.mp3'
         final_file = AudioSegment.from_mp3(input)
         final_file.export(self.soundcloud_src_file)
-        # print('Copied to Staging Directory')
         printer('Copied to Staging Directory')
         self.remove(input)
         self.sleep(2)

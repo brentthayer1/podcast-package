@@ -1,6 +1,6 @@
 import os
 
-def printer(text, inpt=False):
+def printer(text, inpt=None):
 
     
     terminal_width = os.get_terminal_size().columns
@@ -17,3 +17,8 @@ def printer(text, inpt=False):
         return input(inpt)
     
     print()
+
+
+test = printer("Hello World")
+
+print(test)
