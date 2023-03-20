@@ -1,6 +1,8 @@
 import os
 import time
 
+from printer import printer
+
 class Audacity:
 
     def __init__(self, config_file):
@@ -9,7 +11,7 @@ class Audacity:
         Args:
             config_file (dict): Config file
         """        
-        print('Loading DAW')
+        printer('Loading DAW')
         self.config = config_file
         self.sd = self.config["step_directory"] 
         self.process_dir = self.sd["main_dir"] 
@@ -128,7 +130,7 @@ class Audacity:
         time.sleep(1)
         self.scan_devices()
         self.scan_devices_out()
-        print('Audio Device Selected\n')
+        printer('Audio Device Selected\n')
         self.run_command("osascript -e 'quit app \"Audacity\"'")
         time.sleep(2)
         # self.run_command('cd ~ ; cd Desktop/soundcloud_process/ ; python main.py')
