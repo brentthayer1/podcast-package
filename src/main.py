@@ -62,7 +62,7 @@ def main(start_step):
                 printer('Select \'y\' or \'n\'')
                 continue
         
-        process_audio = printer(f'Process Audio in {handler.audacity.src_dir} ?', '[y]es / [n]o: ').lower()
+        process_audio = printer(f'Process Audio?', '[y]es / [n]o: ').lower()
         if process_audio == "y":
             edit_start = int(printer(None, 'Select [SECONDS] Marker For Beginning: ')) * 1000
             edit_stop = int(printer(None, 'Select [SECONDS] Marker For Ending: ')) * 1000

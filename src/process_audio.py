@@ -1,9 +1,8 @@
 import os
 import time
-from pydub import AudioSegment
+# from pydub import AudioSegment
 from datetime import date
 import time
-import json
 import time  
 
 from printer import printer
